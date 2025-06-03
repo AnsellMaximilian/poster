@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Indie_Flower,
+  Playpen_Sans,
+} from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -9,6 +14,16 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const indieFlower = Indie_Flower({
+  weight: "400",
+  variable: "--font-indie-flower",
+});
+
+const playpenSans = Playpen_Sans({
+  variable: "--font-playpen-sans",
   subsets: ["latin"],
 });
 
@@ -25,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased relative bg-white shadow-md w-full mx-auto rounded-sm border-[12px] border-solid flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} ${indieFlower.variable} ${playpenSans.variable} min-h-screen antialiased relative bg-white shadow-md w-full mx-auto rounded-sm border-[12px] border-solid flex flex-col`}
         style={{
           borderImage: `repeating-linear-gradient(
     45deg,
