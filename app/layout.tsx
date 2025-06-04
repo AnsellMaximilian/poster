@@ -7,6 +7,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { UserContextProvider } from "@/context/user/UserContextProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,6 +55,7 @@ export default function RootLayout({
         }}
       >
         <UserContextProvider>{children}</UserContextProvider>
+        <Toaster />
       </body>
     </html>
   );
