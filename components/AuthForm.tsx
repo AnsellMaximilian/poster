@@ -132,7 +132,7 @@ export default function AuthForm({}) {
               <div className="flex">
                 <Button
                   type="submit"
-                  className="ml-auto"
+                  className="ml-auto text-2xl py-2 h-auto px-6 rotate-2 rounded-tl-none rounded-br-none"
                   disabled={isProcessing}
                 >
                   Login
@@ -216,7 +216,7 @@ export default function AuthForm({}) {
               <div className="flex">
                 <Button
                   type="submit"
-                  className="ml-auto"
+                  className="ml-auto text-2xl py-2 h-auto px-6 rotate-2 rounded-tl-none rounded-br-none"
                   disabled={isProcessing}
                 >
                   Register
