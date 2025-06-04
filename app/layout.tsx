@@ -20,6 +20,7 @@ const geistMono = Geist_Mono({
 const indieFlower = Indie_Flower({
   weight: "400",
   variable: "--font-indie-flower",
+  subsets: ["latin"],
 });
 
 const playpenSans = Playpen_Sans({
