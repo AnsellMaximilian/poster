@@ -6,6 +6,7 @@ import {
   Playpen_Sans,
 } from "next/font/google";
 import "./globals.css";
+import { UserContextProvider } from "@/context/user/UserContextProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,7 +53,7 @@ export default function RootLayout({
   ) 12`,
         }}
       >
-        {children}
+        <UserContextProvider>{children}</UserContextProvider>
       </body>
     </html>
   );

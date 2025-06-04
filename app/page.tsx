@@ -3,8 +3,10 @@
 import Image from "next/image";
 import logo from "@/assets/logo.svg";
 import AuthForm from "@/components/AuthForm";
+import { useUser } from "@/context/user/UserContext";
 
 export default function Home() {
+  const { currentUser } = useUser();
   return (
     <div className="grid grid-cols-2 grow">
       <div className="flex flex-col">
@@ -15,7 +17,7 @@ export default function Home() {
           <Image src={logo} alt="logo" width={125} height={300} />
         </div>
         <div className="p-4 font-playpen-sans">
-          <AuthForm />
+          {!currentUser && <AuthForm />}
         </div>
       </div>
     </div>
