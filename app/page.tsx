@@ -5,7 +5,15 @@ import logo from "@/assets/logo.svg";
 import AuthForm from "@/components/AuthForm";
 import { useUser } from "@/context/user/UserContext";
 import { cn } from "@/lib/utils";
-
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 export default function Home() {
   const { currentUser, logout } = useUser();
   return (
@@ -43,8 +51,31 @@ export default function Home() {
             className="ml-auto"
           />
         </div>
-        <div className="p-4 font-playpen-sans">
+        <div className="p-4 font-playpen-sans grow flex flex-col">
           {!currentUser && <AuthForm />}
+
+          <div className="mt-auto flex justify-end pb-4">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="text-2xl py-2 h-auto px-6 rotate-2 rounded-tl-none rounded-br-none">
+                  Swagger
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>How to Send Postcards</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your account and remove your data from our servers.
+                  </DialogDescription>
+                </DialogHeader>
+                <div>
+                  <div>bla bla bla bla</div>
+                  <Button>Create</Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </div>
     </div>
