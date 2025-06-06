@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { PostcardForm } from "@/components/PostcardForm";
 export default function Home() {
   const { currentUser, logout } = useUser();
   return (
@@ -52,7 +53,7 @@ export default function Home() {
           />
         </div>
         <div className="p-4 font-playpen-sans grow flex flex-col">
-          {!currentUser && <AuthForm />}
+          {!currentUser ? <AuthForm /> : <PostcardForm />}
 
           <div className="mt-auto flex justify-end pb-4">
             <Dialog>
