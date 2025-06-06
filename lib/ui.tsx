@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 export function toastError(message: string) {
   toast(message, {
+    className: "font-playpen-sans",
     style: {
       backgroundColor: "#f44336",
       color: "#fff",
