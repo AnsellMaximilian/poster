@@ -15,12 +15,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PostcardForm } from "@/components/PostcardForm";
+import PostCardList from "@/components/PostCardList";
+import { usePostcards } from "@/context/postcards/PostcardsContext";
+import PostcardDetail from "@/components/PostCardDetail";
 export default function Home() {
   const { currentUser, logout } = useUser();
+  const { selectedPostcard } = usePostcards();
+
   return (
     <div className="grid grid-cols-2 grow font-playpen-sans">
       <div className="flex flex-col">
         <div className="text-3xl font-bold p-4">Postr</div>
+        <div className="p-4 grow flex flex-col">
+          <PostCardList />
+        </div>
       </div>
       <div className="flex flex-col border-l border-black">
         <div className="flex p-4 items-start">
@@ -53,7 +61,13 @@ export default function Home() {
           />
         </div>
         <div className="p-4 font-playpen-sans grow flex flex-col">
-          {!currentUser ? <AuthForm /> : <PostcardForm />}
+          {!currentUser ? (
+            <AuthForm />
+          ) : selectedPostcard ? (
+            <PostcardDetail postcard={selectedPostcard} />
+          ) : (
+            <PostcardForm />
+          )}
 
           <div className="mt-auto flex justify-end pb-4">
             <Dialog>

@@ -1,3 +1,5 @@
+import { Models } from "appwrite";
+
 export const MOODS = [
   "CASUAL",
   "SENTIMENTAL",
@@ -29,3 +31,18 @@ export type Theme = (typeof THEMES)[number];
 export type FormatStyle = (typeof FORMATS)[number];
 export type PostcardType = (typeof TYPES)[number];
 export type SenderVoice = (typeof SENDER_VOICES)[number];
+
+export interface Postcard extends Models.Document {
+  type: PostcardType;
+  mood: Mood;
+  themeColor: Theme;
+  formatStyle: FormatStyle;
+  senderVoice: SenderVoice;
+  notes: string | null;
+  userId: string;
+  messageId: string | null;
+  fromEmail: string | null;
+  fromName: string | null;
+  headerMessageId: string | null;
+  emailBody: string | null;
+}

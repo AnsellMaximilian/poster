@@ -1,7 +1,15 @@
 "use client";
 
 import { z } from "zod";
-import { MOODS, THEMES, FORMATS, TYPES, SENDER_VOICES } from "@/types/postcard";
+import {
+  MOODS,
+  THEMES,
+  FORMATS,
+  TYPES,
+  SENDER_VOICES,
+  Postcard,
+} from "@/types/postcard";
+import { nanoid } from "nanoid";
 
 export const postcardSchema = z.object({
   type: z.enum(TYPES),
@@ -33,10 +41,21 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { TYPE_INFO } from "@/const/postcard";
+import { useState } from "react";
+import { toastError } from "@/lib/ui";
+import { getErrorMessage } from "@/lib/utils";
+import { config, databases } from "@/config/appwrite";
+import { useUser } from "@/context/user/UserContext";
+import { Permission, Role } from "appwrite";
+import { usePostcards } from "@/context/postcards/PostcardsContext";
 
 const formSchema = postcardSchema;
 
 export function PostcardForm() {
+  const { currentUser } = useUser();
+  const { setPostcards, setSelectedPostcard } = usePostcards();
+  const [isCreating, setIsCreating] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,8 +68,39 @@ export function PostcardForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!currentUser) return;
+
+    try {
+      setIsCreating(true);
+      const createdPostcard: Postcard = await databases.createDocument(
+        config.dbId,
+        config.postcardCollectionId,
+        nanoid(6),
+        {
+          type: values.type,
+          mood: values.mood,
+          themeColor: values.themeColor,
+          formatStyle: values.formatStyle,
+          senderVoice: values.senderVoice,
+          notes: values.notes || null,
+          userId: currentUser.$id,
+        },
+        [
+          Permission.read(Role.user(currentUser.$id)),
+          Permission.update(Role.user(currentUser.$id)),
+          Permission.delete(Role.user(currentUser.$id)),
+        ]
+      );
+
+      setPostcards((prev) => [...prev, createdPostcard]);
+      setSelectedPostcard(createdPostcard);
+    } catch (error) {
+      toastError(getErrorMessage(error));
+    } finally {
+      setIsCreating(false);
+      form.reset();
+    }
   }
 
   const type = form.watch("type");
@@ -225,10 +275,11 @@ export function PostcardForm() {
 
         <div className="flex justify-end mt-8">
           <Button
+            disabled={isCreating}
             type="submit"
             className="text-2xl py-2 h-auto px-6 rotate-2 rounded-tl-none rounded-br-none"
           >
-            Generate Postcard
+            {isCreating ? "Creating..." : "Create"}
           </Button>
         </div>
       </form>
