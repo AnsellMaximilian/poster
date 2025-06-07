@@ -32,6 +32,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { TYPE_INFO } from "@/const/postcard";
 
 const formSchema = postcardSchema;
 
@@ -39,7 +40,7 @@ export function PostcardForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      type: "GENERIC",
+      type: "DECISION",
       mood: "CASUAL",
       themeColor: "PASTEL",
       formatStyle: "MINIMALIST",
@@ -52,10 +53,14 @@ export function PostcardForm() {
     console.log(values);
   }
 
+  const type = form.watch("type");
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* Type */}
+
+        <h1 className="font-bold text-xl">Create a Postcard</h1>
 
         <FormField
           control={form.control}
@@ -72,7 +77,7 @@ export function PostcardForm() {
                 <SelectContent className="w-full">
                   {TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {type}
+                      {TYPE_INFO[type].label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -81,6 +86,10 @@ export function PostcardForm() {
             </FormItem>
           )}
         />
+
+        <div className="mb-8 text-muted-foreground">
+          {TYPE_INFO[type].description}
+        </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Mood */}
           <FormField
@@ -214,7 +223,14 @@ export function PostcardForm() {
           )}
         />
 
-        <Button type="submit">Generate Postcard</Button>
+        <div className="flex justify-end mt-8">
+          <Button
+            type="submit"
+            className="text-2xl py-2 h-auto px-6 rotate-2 rounded-tl-none rounded-br-none"
+          >
+            Generate Postcard
+          </Button>
+        </div>
       </form>
     </Form>
   );

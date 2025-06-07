@@ -64,10 +64,10 @@ export default function Home() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>How to Send Postcards</DialogTitle>
+                  <DialogTitle>Postcard Created!</DialogTitle>
                   <DialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
+                    Postcard has been created. You are now ready to send an
+                    email to your peers.
                   </DialogDescription>
                 </DialogHeader>
                 <div>

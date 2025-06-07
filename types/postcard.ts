@@ -15,12 +15,7 @@ export const THEMES = [
   "MONOCHROME",
 ] as const;
 export const FORMATS = ["MINIMALIST", "VINTAGE", "BOLD", "PLAYFUL"] as const;
-export const TYPES = [
-  "GENERIC",
-  "INVITATION",
-  "APPRECIATION",
-  "ANNOUNCEMENT",
-] as const;
+export const TYPES = ["DECISION", "TRIBUTE", "RECAP"] as const;
 export const SENDER_VOICES = [
   "FRIENDLY",
   "WITTY",
