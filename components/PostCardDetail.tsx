@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Postcard } from "@/types/postcard";
-import { LetterTextIcon, MailIcon } from "lucide-react";
+import { MailIcon } from "lucide-react";
 
 const TYPE_CC_MAP: Record<string, string[]> = {
   DECISION: ["leadership@company.com", "comms@company.com"],
