@@ -35,7 +35,7 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
 
   const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${toEmail}&su=${encodeURIComponent(
     subject
-  )}&body=${encodeURIComponent(bodyExample)}}`;
+  )}&body=${encodeURIComponent(bodyExample)}`;
 
   const haveAllReplied = postcard.ccs.every((email) =>
     selectedPostcardResponses.some((response) => response.fromEmail === email)
