@@ -4,7 +4,7 @@ import { client, config, databases } from "@/config/appwrite";
 import { ReactNode, useEffect, useState } from "react";
 import { getErrorMessage } from "@/lib/utils";
 import { toastError } from "@/lib/ui";
-import { Query } from "appwrite";
+import { Models, Query } from "appwrite";
 import { Postcard } from "@/types/postcard";
 import { PostcardContext } from "@/context/postcards/PostcardsContext";
 import { useUser } from "@/context/user/UserContext";
@@ -44,24 +44,24 @@ export const PostcardContextProvider: React.FC<{ children: ReactNode }> = ({
   }, [currentUser]);
 
   useEffect(() => {
-    if (!selectedPostcard) return;
-
-    const unsubscribe = client.subscribe(
-      `databases.${config.dbId}.collections.${config.postcardCollectionId}.documents.${selectedPostcard.$id}`,
+    const unsubscribe = client.subscribe<Models.Document>(
+      `databases.${config.dbId}.collections.${config.postcardCollectionId}.documents`,
       (res) => {
-        const postcard = res.payload as Postcard;
-        console.log({ updaterbro: postcard });
-        setPostcards((prev) =>
-          prev.map((p) => (p.$id === postcard.$id ? postcard : p))
-        );
-        setSelectedPostcard(postcard);
+        if (res.payload.$collectionId === config.postcardCollectionId) {
+          const postcard = res.payload as Postcard;
+          console.log({ updaterbro: postcard });
+          setPostcards((prev) =>
+            prev.map((p) => (p.$id === postcard.$id ? postcard : p))
+          );
+          setSelectedPostcard(postcard);
+        }
       }
     );
 
     return () => {
       unsubscribe();
     };
-  }, [selectedPostcard]);
+  }, []);
 
   return (
     <PostcardContext.Provider

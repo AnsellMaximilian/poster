@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { TYPE_INFO } from "@/const/postcard";
 import { copyToClipboardWithToaster } from "@/lib/ui";
 import { Postcard } from "@/types/postcard";
-import { MailIcon } from "lucide-react";
+import { MailIcon, Square, SquareCheckBig } from "lucide-react";
 
 export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
   const {
@@ -66,13 +66,57 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
       </div>
 
       {hasInbound ? (
-        <div className="bg-green-50 border border-green-200 rounded p-4 text-sm whitespace-pre-line">
+        <div className="bg-green-50 border border-green-200 rounded p-4 text-sm whitespace-pre-line space-y-2">
           <h3 className="font-semibold mb-1">✉️ Inbound Email Received</h3>
-          <p>{emailBody}</p>
+
+          <p>
+            This postcard has receivved an inbound emai. Now you need to wait
+            until all CCs have replied to the email with their responses to
+            generate the postcard email.
+          </p>
+
+          <hr className="my-4" />
+          <p className="font-semibold">CCs:</p>
+          <ul className="list-disc list-inside space-y-1">
+            {postcard.ccs.map((email) => {
+              const hasReplied = Math.random() > 0.5; // simulate true/false
+              return (
+                <li key={email} className="flex items-center gap-2">
+                  {!hasReplied ? <Square /> : <SquareCheckBig />}
+                  <span>{email}</span>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded ${
+                      hasReplied
+                        ? "bg-green-200 text-green-800"
+                        : "bg-yellow-200 text-yellow-800"
+                    }`}
+                  >
+                    {hasReplied ? "Replied" : "Waiting"}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+
+          <hr className="my-4" />
+          <p>Inbound Body:</p>
+          <p className="text-gray-600 italic whitespace-pre-line">
+            {emailBody}
+          </p>
         </div>
       ) : (
         <div className="bg-yellow-50 border border-yellow-200 rounded p-4 text-sm space-y-2">
           <h3 className="font-semibold">🕊️ No Inbound Email Yet</h3>
+
+          <p>
+            To finish a postcard, first send an email to the address below with
+            the required subject and at least two CCs. Make sure to mention that
+            they need to{" "}
+            <span className="font-bold">&quot;Reply All&quot;</span> to the
+            email so that their responses are included in the postcard.
+          </p>
+
+          <hr className="my-4" />
           <p>
             To send your message manually, compose an email to:{" "}
             <code className="bg-white px-1 rounded border">{toEmail}</code>

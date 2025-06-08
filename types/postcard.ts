@@ -48,3 +48,14 @@ export interface Postcard extends Models.Document {
   emailSubject: string | null;
   ccs: string[];
 }
+
+export interface PostcardResponse extends Models.Document {
+  postcardId: string;
+  messageId: string;
+  fromEmail: string;
+  fromName: string;
+  headerMessageId: string;
+  emailBody: string;
+  emailSubject: string;
+  replyHeaderMessageId: string;
+}

@@ -7,6 +7,9 @@ export const config = {
     process.env.NEXT_PUBLIC_USER_PROFILE_COLLECTION_ID
   ),
   postcardCollectionId: String(process.env.NEXT_PUBLIC_POSTCARD_COLLECTION_ID),
+  postcardResponseCollectionId: String(
+    process.env.NEXT_PUBLIC_POSTCARD_RESPONSE_COLLECTION_ID
+  ),
 };
 
 export const client = new Client();
