@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ComponentType, useEffect } from "react";
 import { toast } from "sonner";
+import { copyToClipboard, getErrorMessage } from "./utils";
 
 export function toastError(message: string) {
   toast(message, {
@@ -13,6 +14,17 @@ export function toastError(message: string) {
     },
     icon: <X />,
   });
+}
+
+export function copyToClipboardWithToaster(text: string) {
+  try {
+    copyToClipboard(text);
+    toast("Copied to clipboard!", {
+      className: "font-playpen-sans",
+    });
+  } catch (e) {
+    toastError(getErrorMessage(e));
+  }
 }
 
 export const privateRoute = <P extends object>(

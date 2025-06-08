@@ -1,12 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { TYPE_INFO } from "@/const/postcard";
+import { copyToClipboardWithToaster } from "@/lib/ui";
 import { Postcard } from "@/types/postcard";
 import { MailIcon } from "lucide-react";
-
-const TYPE_CC_MAP: Record<string, string[]> = {
-  DECISION: ["leadership@company.com", "comms@company.com"],
-  TRIBUTE: ["team@company.com", "hr@company.com"],
-  RECAP: ["ops@company.com", "records@company.com"],
-};
 
 export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
   const {
@@ -17,66 +13,55 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
     formatStyle,
     senderVoice,
     notes,
-    userId,
-    fromEmail,
-    fromName,
     emailBody,
   } = postcard;
 
   const hasInbound = Boolean(emailBody);
   const toEmail = process.env.NEXT_PUBLIC_INBOUND_ADDRESS;
-  const ccList = TYPE_CC_MAP[type] ?? [];
-  const subject = `[${$id}]: <DO NOT DELETE ID> Your ${type.toLowerCase()} postcard`;
-  const bodyExample = `Dear team,\n\nHere’s a message for the ${type.toLowerCase()} postcard.\n\nThanks,\n${
-    fromName ?? "Your Name"
-  }`;
+  const subject = `[${$id}]: <Your subject here>`;
+  const bodyExample = TYPE_INFO[type].example;
 
   const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${toEmail}&su=${encodeURIComponent(
     subject
-  )}&body=${encodeURIComponent(bodyExample)}&cc=${encodeURIComponent(
-    ccList.join(",")
-  )}`;
+  )}&body=${encodeURIComponent(bodyExample)}}`;
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white border border-gray-200 rounded-md shadow-sm space-y-6">
       <h2 className="text-2xl border-b pb-2 flex items-center gap-2">
         <MailIcon />
         <span className="font-semibold">Postcard Details</span>
-        <span className="hover:underline cursor-pointer font-bold ml-auto">
+        <span
+          className="hover:underline cursor-pointer font-bold ml-auto"
+          onClick={() => copyToClipboardWithToaster($id)}
+        >
           [{$id}]
         </span>
       </h2>
 
       <div className="space-y-2 text-sm leading-relaxed">
+        <div className="grid grid-cols-2 gap-2">
+          <p>
+            <strong>ID:</strong> {$id}
+          </p>
+          <p>
+            <strong>Type:</strong> {type}
+          </p>
+          <p>
+            <strong>Mood:</strong> {mood}
+          </p>
+          <p>
+            <strong>Theme Color:</strong> {themeColor}
+          </p>
+          <p>
+            <strong>Format Style:</strong> {formatStyle}
+          </p>
+          <p>
+            <strong>Sender Voice:</strong> {senderVoice}
+          </p>
+        </div>
         <p>
-          <strong>ID:</strong> {$id}
-        </p>
-        <p>
-          <strong>Type:</strong> {type}
-        </p>
-        <p>
-          <strong>Mood:</strong> {mood}
-        </p>
-        <p>
-          <strong>Theme Color:</strong> {themeColor}
-        </p>
-        <p>
-          <strong>Format Style:</strong> {formatStyle}
-        </p>
-        <p>
-          <strong>Sender Voice:</strong> {senderVoice}
-        </p>
-        <p>
-          <strong>Notes:</strong> {notes ?? "—"}
-        </p>
-        <p>
-          <strong>User ID:</strong> {userId}
-        </p>
-        <p>
-          <strong>From Name:</strong> {fromName ?? "—"}
-        </p>
-        <p>
-          <strong>From Email:</strong> {fromEmail ?? "—"}
+          <strong>Notes:</strong> <br />
+          {notes ?? "—"}
         </p>
       </div>
 
@@ -94,14 +79,12 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
           </p>
           <p>
             Subject must begin with:{" "}
-            <code className="bg-white px-1 rounded border">
-              [{$id}]: &lt;Your subject&gt;
-            </code>
+            <code className="bg-white px-1 rounded border">{subject}</code>
           </p>
           <p>Include at least two CCs when composing your email</p>
-          <p className="text-gray-600 italic">
-            Example body:
-            <br />
+          <hr className="my-4" />
+          <p>Example body:</p>
+          <p className="text-gray-600 italic whitespace-pre-line">
             {bodyExample}
           </p>
 
