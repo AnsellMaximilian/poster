@@ -44,6 +44,8 @@ export default function PostCardItem({ postcard }: { postcard: Postcard }) {
       {/* Tape */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-3 bg-neutral-200 rotate-2 rounded-b-sm shadow-sm z-10" />
 
+      <div className="text-xs font-medium line-clamp-5">[{postcard.$id}]</div>
+
       {/* Content */}
       <div className="text-xs font-medium line-clamp-5">
         {postcard.emailBody ?? "No message yet."}
