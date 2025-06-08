@@ -5,7 +5,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { getErrorMessage } from "@/lib/utils";
 import { toastError } from "@/lib/ui";
 import { Models, Query } from "appwrite";
-import { Postcard } from "@/types/postcard";
+import { Postcard, PostcardResponse } from "@/types/postcard";
 import { PostcardContext } from "@/context/postcards/PostcardsContext";
 import { useUser } from "@/context/user/UserContext";
 
@@ -20,6 +20,10 @@ export const PostcardContextProvider: React.FC<{ children: ReactNode }> = ({
   const [selectedPostcard, setSelectedPostcard] = useState<Postcard | null>(
     null
   );
+
+  const [selectedPostcardResponses, setSelectedPostcardResponses] = useState<
+    PostcardResponse[]
+  >([]);
 
   useEffect(() => {
     (async () => {
@@ -63,6 +67,53 @@ export const PostcardContextProvider: React.FC<{ children: ReactNode }> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (selectedPostcard) {
+      (async () => {
+        try {
+          setIsLoading(true);
+          const res = await databases.listDocuments<PostcardResponse>(
+            config.dbId,
+            config.postcardResponseCollectionId,
+            [Query.equal("postcardId", selectedPostcard.$id)]
+          );
+
+          const data = res.documents as PostcardResponse[];
+
+          setSelectedPostcardResponses(data);
+        } catch (error) {
+          toastError(getErrorMessage(error));
+        } finally {
+          setIsLoading(false);
+        }
+      })();
+    } else {
+      setSelectedPostcardResponses([]);
+    }
+  }, [selectedPostcard]);
+
+  useEffect(() => {
+    const unsubscribe = client.subscribe<Models.Document>(
+      `databases.${config.dbId}.collections.${config.postcardResponseCollectionId}.documents`,
+      (res) => {
+        if (res.payload.$collectionId === config.postcardResponseCollectionId) {
+          const postcardResponse = res.payload as PostcardResponse;
+          console.log({ updatedPostcardResponse: postcardResponse });
+
+          setSelectedPostcardResponses((prev) =>
+            prev.map((p) =>
+              p.$id === postcardResponse.$id ? postcardResponse : p
+            )
+          );
+        }
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <PostcardContext.Provider
       value={{
@@ -71,6 +122,8 @@ export const PostcardContextProvider: React.FC<{ children: ReactNode }> = ({
         isLoading,
         selectedPostcard,
         setSelectedPostcard,
+        selectedPostcardResponses,
+        setSelectedPostcardResponses,
       }}
     >
       {children}

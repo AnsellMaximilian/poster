@@ -76,8 +76,7 @@ const POST = async (req: NextRequest) => {
       );
     }
 
-    const rawBody =
-      inboundEmail.TextBody?.trim() || inboundEmail.HtmlBody?.trim() || "";
+    const rawBody = inboundEmail.StrippedTextReply.trim() || "";
 
     const emailBody =
       rawBody.length > MAX_BODY_LENGTH - "\n\n[...truncated]".length

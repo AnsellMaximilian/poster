@@ -72,9 +72,9 @@ export default function Home() {
           <div className="mt-auto flex justify-end pb-4">
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="text-2xl py-2 h-auto px-6 rotate-2 rounded-tl-none rounded-br-none">
+                {/* <Button className="text-2xl py-2 h-auto px-6 rotate-2 rounded-tl-none rounded-br-none">
                   Swagger
-                </Button>
+                </Button> */}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>

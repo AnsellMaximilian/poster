@@ -1,4 +1,4 @@
-import { Postcard } from "@/types/postcard";
+import { Postcard, PostcardResponse } from "@/types/postcard";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 export interface PostcardContextData {
   postcards: Postcard[];
@@ -7,6 +7,9 @@ export interface PostcardContextData {
 
   selectedPostcard: Postcard | null;
   setSelectedPostcard: Dispatch<SetStateAction<Postcard | null>>;
+
+  selectedPostcardResponses: PostcardResponse[];
+  setSelectedPostcardResponses: Dispatch<SetStateAction<PostcardResponse[]>>;
 }
 
 export const PostcardContext = createContext<PostcardContextData>({
@@ -16,6 +19,9 @@ export const PostcardContext = createContext<PostcardContextData>({
 
   selectedPostcard: null,
   setSelectedPostcard: () => {},
+
+  selectedPostcardResponses: [],
+  setSelectedPostcardResponses: () => {},
 });
 
 export const usePostcards = (): PostcardContextData => {

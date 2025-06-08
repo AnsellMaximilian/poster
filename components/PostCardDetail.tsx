@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { TYPE_INFO } from "@/const/postcard";
+import { usePostcards } from "@/context/postcards/PostcardsContext";
 import { copyToClipboardWithToaster } from "@/lib/ui";
 import { Postcard } from "@/types/postcard";
 import { MailIcon, Square, SquareCheckBig } from "lucide-react";
 
 export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
+  const { selectedPostcardResponses } = usePostcards();
+
   const {
     $id,
     type,
@@ -24,6 +27,10 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
   const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${toEmail}&su=${encodeURIComponent(
     subject
   )}&body=${encodeURIComponent(bodyExample)}}`;
+
+  const haveAllReplied = postcard.ccs.every((email) =>
+    selectedPostcardResponses.some((response) => response.fromEmail === email)
+  );
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white border border-gray-200 rounded-md shadow-sm space-y-6">
@@ -79,7 +86,9 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
           <p className="font-semibold">CCs:</p>
           <ul className="list-disc list-inside space-y-1">
             {postcard.ccs.map((email) => {
-              const hasReplied = Math.random() > 0.5; // simulate true/false
+              const hasReplied = selectedPostcardResponses.some(
+                (response) => response.fromEmail === email
+              );
               return (
                 <li key={email} className="flex items-center gap-2">
                   {!hasReplied ? <Square /> : <SquareCheckBig />}
@@ -103,6 +112,14 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
           <p className="text-gray-600 italic whitespace-pre-line">
             {emailBody}
           </p>
+
+          {!haveAllReplied && (
+            <div className="flex justify-end mt-8">
+              <Button className="text-lg h-auto px-4 rotate-2 rounded-tl-none rounded-br-none">
+                Send Postcard Email
+              </Button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="bg-yellow-50 border border-yellow-200 rounded p-4 text-sm space-y-2">
