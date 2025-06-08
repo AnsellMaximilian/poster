@@ -71,7 +71,6 @@ export const PostcardContextProvider: React.FC<{ children: ReactNode }> = ({
     if (selectedPostcard) {
       (async () => {
         try {
-          setIsLoading(true);
           const res = await databases.listDocuments<PostcardResponse>(
             config.dbId,
             config.postcardResponseCollectionId,
@@ -83,8 +82,6 @@ export const PostcardContextProvider: React.FC<{ children: ReactNode }> = ({
           setSelectedPostcardResponses(data);
         } catch (error) {
           toastError(getErrorMessage(error));
-        } finally {
-          setIsLoading(false);
         }
       })();
     } else {
@@ -100,11 +97,18 @@ export const PostcardContextProvider: React.FC<{ children: ReactNode }> = ({
           const postcardResponse = res.payload as PostcardResponse;
           console.log({ updatedPostcardResponse: postcardResponse });
 
-          setSelectedPostcardResponses((prev) =>
-            prev.map((p) =>
-              p.$id === postcardResponse.$id ? postcardResponse : p
-            )
-          );
+          setSelectedPostcardResponses((prev) => {
+            const index = prev.findIndex((p) => p.$id === postcardResponse.$id);
+            if (index === -1) {
+              // not found, add it
+              return [...prev, postcardResponse];
+            } else {
+              // found, update it
+              return prev.map((p) =>
+                p.$id === postcardResponse.$id ? postcardResponse : p
+              );
+            }
+          });
         }
       }
     );

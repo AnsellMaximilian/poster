@@ -1,12 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { TYPE_INFO } from "@/const/postcard";
 import { usePostcards } from "@/context/postcards/PostcardsContext";
-import { copyToClipboardWithToaster } from "@/lib/ui";
+import { useUser } from "@/context/user/UserContext";
+import { copyToClipboardWithToaster, toastError } from "@/lib/ui";
+import { getErrorMessage } from "@/lib/utils";
+import { ApiResponse } from "@/types/common";
 import { Postcard } from "@/types/postcard";
+import axios from "axios";
 import { MailIcon, Square, SquareCheckBig } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
   const { selectedPostcardResponses } = usePostcards();
+  const { currentUser } = useUser();
+
+  const [isSending, setIsSending] = useState(false);
 
   const {
     $id,
@@ -31,6 +40,32 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
   const haveAllReplied = postcard.ccs.every((email) =>
     selectedPostcardResponses.some((response) => response.fromEmail === email)
   );
+
+  const handleSendPostcardEmail = async () => {
+    if (!currentUser) return;
+    try {
+      setIsSending(true);
+      const axiosRes = await axios.post("/api/postmark/send", {
+        postcardId: postcard.$id,
+        currentUserId: currentUser.$id,
+      });
+
+      const res = axiosRes.data as ApiResponse<Postcard>;
+
+      if (res.success) {
+        toast(res.message || "Email sent!", {
+          className: "font-playpen-sans",
+        });
+      } else {
+        toastError(res.message || "Failed to send postcard email");
+      }
+    } catch (error) {
+      console.log({ error });
+      toastError(getErrorMessage(error));
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white border border-gray-200 rounded-md shadow-sm space-y-6">
@@ -72,7 +107,32 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
         </p>
       </div>
 
-      {hasInbound ? (
+      {postcard.finalReplyHtml ? (
+        // Final postcard HTML exists
+        <div className="bg-blue-50 border border-blue-200 rounded p-4 space-y-4">
+          <h3 className="font-semibold text-lg">🎉 Final Postcard Ready</h3>
+          <p>
+            This postcard has been finalized. You can preview or copy the
+            generated HTML below.
+          </p>
+
+          <div className="overflow-auto border rounded bg-white p-4 max-h-[600px]">
+            <div
+              className="email-preview"
+              dangerouslySetInnerHTML={{ __html: postcard.finalReplyHtml }}
+            />
+          </div>
+
+          <div className="flex gap-2 justify-end">
+            <Button
+              variant="secondary"
+              onClick={() => copyToClipboardWithToaster(postcard.html || "")}
+            >
+              Copy HTML
+            </Button>
+          </div>
+        </div>
+      ) : hasInbound ? (
         <div className="bg-green-50 border border-green-200 rounded p-4 text-sm whitespace-pre-line space-y-2">
           <h3 className="font-semibold mb-1">✉️ Inbound Email Received</h3>
 
@@ -113,9 +173,15 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
             {emailBody}
           </p>
 
-          {!haveAllReplied && (
+          {haveAllReplied && (
             <div className="flex justify-end mt-8">
-              <Button className="text-lg h-auto px-4 rotate-2 rounded-tl-none rounded-br-none">
+              <Button
+                className="text-lg h-auto px-4 rotate-2 rounded-tl-none rounded-br-none"
+                disabled={isSending}
+                onClick={() => {
+                  handleSendPostcardEmail();
+                }}
+              >
                 Send Postcard Email
               </Button>
             </div>

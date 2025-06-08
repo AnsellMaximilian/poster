@@ -18,6 +18,14 @@ import { PostcardForm } from "@/components/PostcardForm";
 import PostCardList from "@/components/PostCardList";
 import { usePostcards } from "@/context/postcards/PostcardsContext";
 import PostcardDetail from "@/components/PostCardDetail";
+import { AnimatePresence, motion } from "framer-motion";
+
+const fadeVariant = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
+};
+
 export default function Home() {
   const { currentUser, logout } = useUser();
   const { selectedPostcard } = usePostcards();
@@ -27,7 +35,7 @@ export default function Home() {
       <div className="flex flex-col">
         <div className="text-3xl font-bold p-4">Postr</div>
         <div className="p-4 grow flex flex-col">
-          <PostCardList />
+          {currentUser && <PostCardList />}
         </div>
       </div>
       <div className="flex flex-col border-l border-black">
@@ -61,13 +69,39 @@ export default function Home() {
           />
         </div>
         <div className="p-4 font-playpen-sans grow flex flex-col">
-          {!currentUser ? (
-            <AuthForm />
-          ) : selectedPostcard ? (
-            <PostcardDetail postcard={selectedPostcard} />
-          ) : (
-            <PostcardForm />
-          )}
+          <AnimatePresence mode="wait">
+            {!currentUser ? (
+              <motion.div
+                key="auth"
+                variants={fadeVariant}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <AuthForm />
+              </motion.div>
+            ) : selectedPostcard ? (
+              <motion.div
+                key="detail"
+                variants={fadeVariant}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <PostcardDetail postcard={selectedPostcard} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="form"
+                variants={fadeVariant}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <PostcardForm />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="mt-auto flex justify-end pb-4">
             <Dialog>
