@@ -50,10 +50,10 @@ export default function PostCardItem({ postcard }: { postcard: Postcard }) {
         </div>
 
         <div className="text-xs">
-          {postcard.messageId
-            ? "Waiting for Replies"
-            : postcard.finalReplyHtml
+          {postcard.finalReplyHtml
             ? "Email Generated"
+            : postcard.messageId
+            ? "Waiting for Replies"
             : "Waiting for Inbound"}
         </div>
       </div>
