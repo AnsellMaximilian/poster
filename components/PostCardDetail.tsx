@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Postcard } from "@/types/postcard";
-import { MailIcon } from "lucide-react";
+import { LetterTextIcon, MailIcon } from "lucide-react";
 
 const TYPE_CC_MAP: Record<string, string[]> = {
   DECISION: ["leadership@company.com", "comms@company.com"],
@@ -39,7 +39,13 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white border border-gray-200 rounded-md shadow-sm space-y-6">
-      <h2 className="text-2xl font-serif border-b pb-2">📮 Postcard Details</h2>
+      <h2 className="text-2xl border-b pb-2 flex items-center gap-2">
+        <MailIcon />
+        <span className="font-semibold">Postcard Details</span>
+        <span className="hover:underline cursor-pointer font-bold ml-auto">
+          [{$id}]
+        </span>
+      </h2>
 
       <div className="space-y-2 text-sm leading-relaxed">
         <p>
@@ -92,14 +98,17 @@ export default function PostcardDetail({ postcard }: { postcard: Postcard }) {
               [{$id}]: &lt;Your subject&gt;
             </code>
           </p>
-          <p>
-            Include at least these CCs:{" "}
-            <span className="font-medium">{ccList.join(", ")}</span>
-          </p>
+          <p>Include at least two CCs when composing your email</p>
           <p className="text-gray-600 italic">
             Example body:
             <br />
             {bodyExample}
+          </p>
+
+          <hr className="my-4" />
+
+          <p className="">
+            Or... Click the button below to get started quickly.
           </p>
           <Button asChild className="mt-2">
             <a href={gmailLink} target="_blank" rel="noopener noreferrer">

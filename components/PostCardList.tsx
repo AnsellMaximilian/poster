@@ -1,28 +1,15 @@
 "use client";
 
-import { client, config } from "@/config/appwrite";
 import { usePostcards } from "@/context/postcards/PostcardsContext";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import React, { useEffect } from "react";
+import React from "react";
 import PostcardItem from "./PostCardItem";
 
 export default function PostCardList() {
   const { postcards, isLoading, selectedPostcard, setSelectedPostcard } =
     usePostcards();
-  useEffect(() => {
-    const unsubscribe = client.subscribe(
-      `databases.${config.dbId}.collections.${config.postcardCollectionId}.documents`,
-      (res) => {
-        console.log({ res });
-      }
-    );
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 
   return (
     <div>
