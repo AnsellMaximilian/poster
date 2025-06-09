@@ -31,14 +31,14 @@ export default function Home() {
   const { selectedPostcard } = usePostcards();
 
   return (
-    <div className="grid grid-cols-2 grow font-playpen-sans">
-      <div className="flex flex-col">
+    <div className="grid grid-cols-1 md:grid-cols-2 grow font-playpen-sans">
+      <div className="flex flex-col row-start-2 md:row-start-1">
         <div className="text-3xl font-bold p-4">Postr</div>
         <div className="p-4 grow flex flex-col">
           {currentUser && <PostCardList />}
         </div>
       </div>
-      <div className="flex flex-col border-l border-black">
+      <div className="flex flex-col md:border-l border-black">
         <div className="flex p-4 items-start">
           <div className="border-b-2 pr-4 border-black flex gap-2 relative items-center">
             {currentUser && (

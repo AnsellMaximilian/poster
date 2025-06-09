@@ -28,7 +28,7 @@ export default function PostCardItem({ postcard }: { postcard: Postcard }) {
   return (
     <div
       className={cn(
-        "relative w-48 aspect-[4/5] rounded-md shadow-md p-3 flex flex-col justify-between",
+        "relative w-72 sm:w-48 aspect-[4/5] rounded-md shadow-md p-3 flex flex-col justify-between",
         "cursor-pointer transition-transform hover:scale-105",
         selectedPostcard?.$id === postcard.$id
           ? "scale-110 hover:scale-110 rotate-6"
