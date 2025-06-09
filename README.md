@@ -2,7 +2,7 @@ This is a submission for the [Postmark Challenge: Inbox Innovators](https://dev.
 
 ## Quick Video Demo
 
-{% embed https://youtu.be/__BLWuKxhPk %}
+[Watch it here](https://youtu.be/__BLWuKxhPk?si=9nBJb9cqmSVv98Dm)
 
 ## What I Built 
 <!-- Share an overview about your project. --> 
